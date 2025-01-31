@@ -1,0 +1,23 @@
+{
+  "name": "reactsample",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-datepicker": "^7.6.0",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^7.1.4"
+  },
+  "devDependencies": {
+    "vite": "^6.0.11"
+  }
+}
