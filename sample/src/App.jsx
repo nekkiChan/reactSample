@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";  // BrowserRouterをインポート
 import InputTestComponent from "./components/pages/InputTestComponent";
-import MuiTableComponent from "./components/pages/MuiTableComponent";
+import MuiTableComponent from "./components/pages/mui-table/MuiTableComponent";
 
 const App = () => {
   return (
