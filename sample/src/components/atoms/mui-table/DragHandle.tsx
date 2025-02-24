@@ -2,16 +2,12 @@ import React from "react";
 import { IconButton } from "@mui/material";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 
-interface DragHandleButtonProps {
-    listeners: any;
-}
-
-const DragHandleButton: React.FC<DragHandleButtonProps> = ({ listeners }) => {
+const DragHandle = (props) => {
     return (
-        <IconButton {...listeners}>
+        <IconButton {...props}>
         <DragIndicatorIcon />
         </IconButton>
     );
 };
 
-export default DragHandleButton;
+export default DragHandle;

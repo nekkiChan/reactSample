@@ -1,16 +1,13 @@
 import React from "react";
-import { Button } from "@mui/material";
+import { IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import RestoreIcon from "@mui/icons-material/Restore";
 
-interface DeleteButtonProps {
-    isDeleted: boolean;
-    onClick: () => void;
-}
-
-const DeleteButton: React.FC<DeleteButtonProps> = ({ isDeleted, onClick }) => {
+const DeleteButton = ({ onClick, deleteFlag }) => {
     return (
-        <Button variant="outlined" color={isDeleted ? "secondary" : "primary"} onClick={onClick}>
-        {isDeleted ? "復元" : "削除"}
-        </Button>
+        <IconButton onClick={onClick}>
+            {deleteFlag ? <RestoreIcon /> : <DeleteIcon />}
+        </IconButton>
     );
 };
 
