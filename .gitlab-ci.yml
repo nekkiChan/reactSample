@@ -1,0 +1,65 @@
+stages:
+  - notify
+
+discord_notify:
+  stage: notify
+  script:
+    - |
+      PAYLOAD=""
+      # Push イベント
+      if [[ "$CI_PIPELINE_SOURCE" == "push" ]]; then
+        PAYLOAD="{
+          \"embeds\": [{
+            \"title\": \"🚀 Push to $CI_COMMIT_BRANCH\",
+            \"description\": \"**$GITLAB_USER_NAME** pushed to \`$CI_COMMIT_BRANCH\`\",
+            \"color\": 3066993,
+            \"fields\": [
+              {\"name\": \"Repository\", \"value\": \"$CI_PROJECT_PATH\"},
+              {\"name\": \"Commit\", \"value\": \"$CI_COMMIT_MESSAGE\"}
+            ],
+            \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+          }]
+        }"
+      # Merge Request イベント
+      elif [[ "$CI_PIPELINE_SOURCE" == "merge_request_event" ]]; then
+        PAYLOAD="{
+          \"embeds\": [{
+            \"title\": \"📦 Merge Request: $CI_MERGE_REQUEST_TITLE\",
+            \"description\": \"Merge request by **$GITLAB_USER_NAME** to \`$CI_COMMIT_BRANCH\`\",
+            \"color\": 3447003,
+            \"fields\": [
+              {\"name\": \"Target\", \"value\": \"$CI_PROJECT_PATH\"},
+              {\"name\": \"State\", \"value\": \"$CI_MERGE_REQUEST_STATE\"}
+            ],
+            \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+          }]
+        }"
+      # Issue 作成イベント
+      elif [[ "$CI_PIPELINE_SOURCE" == "web" && "$CI_COMMIT_MESSAGE" =~ "Issue" ]]; then
+        PAYLOAD="{
+          \"embeds\": [{
+            \"title\": \"💡 New Issue Created\",
+            \"description\": \"Issue created by **$GITLAB_USER_NAME**.\",
+            \"color\": 14177041,
+            \"fields\": [
+              {\"name\": \"Repository\", \"value\": \"$CI_PROJECT_PATH\"},
+              {\"name\": \"Issue Title\", \"value\": \"$CI_COMMIT_MESSAGE\"}
+            ],
+            \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+          }]
+        }"
+      fi
+
+      if [[ -n "$PAYLOAD" ]]; then
+        curl -H "Content-Type: application/json" \
+             -X POST \
+             -d "$PAYLOAD" \
+             "$DISCORD_WEBHOOK_URL"
+      fi
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      when: always
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+      when: always
