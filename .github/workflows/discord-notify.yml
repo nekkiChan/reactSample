@@ -2,7 +2,6 @@ name: Notify Discord on Push
 
 on:
   push:
-    branches: [main]
 
 jobs:
   notify:
@@ -14,6 +13,7 @@ jobs:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           ACTOR: ${{ github.actor }}
           REPO: ${{ github.repository }}
+          BRANCH: ${{ github.ref_name }}
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
           TIMESTAMP: ${{ github.event.head_commit.timestamp }}
         run: |
@@ -22,13 +22,17 @@ jobs:
             -d "{
               \"embeds\": [
                 {
-                  \"title\": \"🚀 New push to main branch\",
+                  \"title\": \"🚀 Push to ${BRANCH} branch\",
                   \"description\": \"A new push has been made by **${ACTOR}**.\",
                   \"color\": 65280,
                   \"fields\": [
                     {
                       \"name\": \"Repository\",
                       \"value\": \"${REPO}\"
+                    },
+                    {
+                      \"name\": \"Branch\",
+                      \"value\": \"${BRANCH}\"
                     },
                     {
                       \"name\": \"Commit Message\",
